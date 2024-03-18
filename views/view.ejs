@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Visitor Count</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Building Visitor count</h1>
+    </header>
+    <div class="time-container">
+        <h3 class="current-time">Current Time</h3>
+        <div class="time-div">
+            <span style="font-weight: bold;">Date: <span id="current-date"></span><br></span>
+            <span style="font-weight: bold;">Time: <span id="current-time"></span></span>
+        </div>
+        <div class="counter">
+            <h3>In: <span id="people-in"></span> </h3>
+            <h3>Out: <span id="people-out"></span> </h3>
+            <h3>Secound Floor: <span id="secoundFloor"></span> </h3>
+            <br>
+            <br>
+        </div>
+    </div>
+    <div class="currently-people">
+        <h1 class="current-people">People Currently: <br><br><span id="current-people"></span></h1>
+    </div>
+    <!-- Include the Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const dataPoints = []
+        const socket = io();
+
+        socket.on('data', function (data) {
+            // console.log('Data received:', data);
+            document.getElementById('current-people').textContent = data.CurrentPeopleIn || '0';
+            document.getElementById('people-in').textContent = data.EnteringNumber || '0';
+            document.getElementById('people-out').textContent = data.OutingNumber || '0';
+            document.getElementById('secoundFloor').textContent = 0;
+            const currentTime = new Date().toLocaleTimeString(); // Get current time as a string
+            const newDataPoint = {
+                time: currentTime,
+                value: data.CurrentPeopleIn || 0
+            };
+            dataPoints.push(newDataPoint)
+            updateChart(dataPoints);
+        });
+        // Get current date and time information from JavaScript
+        // Function to update the current time
+        function updateTime() {
+            var now = new Date();
+            var currentDate = now.toLocaleDateString();
+            var currentTime = now.toLocaleTimeString();
+            document.getElementById("current-date").textContent = currentDate;
+            document.getElementById("current-time").textContent = currentTime;
+        }
+
+        // Update the time immediately and every second afterward
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+    <div style="width: 600px;">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        let myChart = null; // Global variable to hold the chart instance
+
+        function updateChart(dataPoints) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const labels = dataPoints.map(dp => dp.time);
+            const data = dataPoints.map(dp => dp.value);
+
+            if (!myChart) {
+                // Chart not created yet, initialize it
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'People Count',
+                            data: data,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Chart exists, update its data
+                myChart.data.labels = labels;
+                myChart.data.datasets[0].data = data;
+                myChart.update();
+            }
+        }
+
+
+        // document.addEventListener('DOMContentLoaded', getData(dataPoints));
+    </script>
+</body>
+
+</html>

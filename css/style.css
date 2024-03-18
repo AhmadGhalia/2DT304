@@ -1,0 +1,58 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: rgb(236, 200, 147);
+}
+
+header {
+    text-align: center;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(41,209,214,1) 0%, rgba(18,102,113,1) 85%); 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height: 150px;
+    overflow: hidden;
+}
+header h1 {
+    padding-top: 55px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #fff;
+}
+
+
+.time-container {
+    height: 350px;
+    float: right;
+    padding: 10px;
+    background-color: #e9e9e9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 90px;
+    margin-right: 20px;
+    position: relative;
+    font-size: 24px;
+    width: 280px;
+}
+.current-time{
+    text-align: center;
+    padding: 20px;
+}
+.counter {
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+}
+.counter h2, h3 {
+    margin: 8px 0;
+}
+
+.currently-people {
+    text-align: center;
+    margin-top: 150px;
+    font-size: 40px;
+    font-weight: bold;
+}
